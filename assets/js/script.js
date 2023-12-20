@@ -1,11 +1,3 @@
-/** 
-Author: Build Rise Shine with Nyros (BRS) 
-Created: 2023 
-Library / Component: Script file
-Description: HTML 5 Canvas
-(c) Copyright by BRS with Nyros. 
-**/
-
 /* Get Our Elements */
 const canvas = document.getElementById("draw");
 canvas.width = canvas.clientWidth;
