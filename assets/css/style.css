@@ -42,6 +42,10 @@ body {
      0 8px 0 -4px #39a2db,
      0 12px 10px -3px #39a2db;
    }
+   #toggleMode{
+    text-align: center;
+    margin-bottom: 20px;
+   }
 
    .git{
     text-align: center;
