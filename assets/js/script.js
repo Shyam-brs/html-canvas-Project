@@ -3,7 +3,7 @@ const canvas = document.getElementById("draw");
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d"); // 2 prams - context type and context attributes
 
 // Default theme
 let chathams_blue = "#1A4B84";
@@ -16,21 +16,27 @@ ctx.lineWidth = 10;
 
 // Init
 let isDrawing = false;
-let isErasing = false; // New variable for erasing
 let lastX = 0;
 let lastY = 0;
 let hue = 0;
 
 function draw(e) {
-  if (!isDrawing || isErasing) return;
-
+  if (!isDrawing) return; // Check for mouse click
   ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
 
-  ctx.beginPath();
-  ctx.moveTo(lastX, lastY);
-  ctx.lineTo(e.offsetX, e.offsetY);
-  ctx.stroke();
+  ctx.beginPath(); //Begin a new path
 
+  // Start drawing the line
+  ctx.moveTo(lastX, lastY);
+  console.log(`LAST X - ${lastX}`);
+  console.log(`LAST Y - ${lastY}`);
+
+  // Go to current mouse location
+  ctx.lineTo(e.offsetX, e.offsetY);
+  console.log(`CURRENT X - ${e.offsetX}`);
+  console.log(`CURRENT Y - ${e.offsetY}`);
+
+  ctx.stroke();
   [lastX, lastY] = [e.offsetX, e.offsetY];
 
   hue++;
@@ -39,31 +45,37 @@ function draw(e) {
   }
 }
 
-function erase(e) {
-  if (!isDrawing || !isErasing) return;
-
-  ctx.clearRect(e.offsetX - 5, e.offsetY - 5, 10, 10);
-}
-
 // Event Listeners
 canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
-  isErasing ? erase(e) : ([lastX, lastY] = [e.offsetX, e.offsetY]);
+  [lastX, lastY] = [e.offsetX, e.offsetY]; //Mouse cursor's coordinates
 });
 
-canvas.addEventListener("mousemove", (e) => {
-  draw(e);
-  erase(e); // Erase while moving if erasing mode is active
-});
-
+canvas.addEventListener("mousemove", draw);
 canvas.addEventListener("mouseup", () => (isDrawing = false));
 canvas.addEventListener("mouseout", () => (isDrawing = false));
 
-// Toggle between draw and erase modes
-document.getElementById("toggleMode").addEventListener("click", () => {
-  isErasing = !isErasing;
-  document.getElementById("toggleMode").innerText = isErasing ? "Draw Mode" : "Erase Mode";
-});
+// Add event listener for the Clear Canvas button
+document.getElementById("clearCanvas").addEventListener("click", clearCanvas);
+
+// Function to clear the entire canvas
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function erase(e) {
+  if (!isDrawing || !isErasing) return;
+
+  // Adjust the size of the area to clear as needed
+  const eraseSize = 20;
+
+  ctx.clearRect(
+    e.offsetX - eraseSize / 2,
+    e.offsetY - eraseSize / 2,
+    eraseSize,
+    eraseSize
+  );
+}
 
 // Set theme
 function setTheme(theme) {
